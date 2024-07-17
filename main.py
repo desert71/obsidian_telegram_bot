@@ -1,12 +1,14 @@
 import asyncio
 import logging
+import os
+import setting
 import sys
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from datetime import datetime
 
-API_TOKEN = "6892378455:AAFB0lo4ESrliOoMT5h3kXYLOVFk009YeCw"
+API_TOKEN = setting.API_TOKEN
 
 dp = Dispatcher()
 
@@ -16,8 +18,11 @@ async def command_start_handler(message: Message) -> None:
 
 @dp.message()
 async def add_note(message: Message) -> None:
-    with open('new_note.md', 'a') as file:
+    with open('/home/obsidian_telegram_bot/new_note.md', 'a') as file:
         file.write(f"##Новая заметка от {datetime.now()}\n {message.text}\n")
+    os.system("git add .")
+    os.system(f'git commit -m "Добавление быстрой заметки в {datetime.now()}"')
+    os.system("git push origin main")
 
 async def main() -> None:
     bot = Bot(token=API_TOKEN)
